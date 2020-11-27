@@ -1,23 +1,17 @@
 const express = require('express')
+const apiRoutes = require('./routes/api')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+
 const app = express()
 const port = process.env.PORT || '3000'
-const apiRoutes = require('./routes/api') // Añádelo debajo de el require de Express.
-const mongoose = require('mongoose')
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/openwebinars'
-const bodyParser = require('body-parser')
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/Local'
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:JJ7vDwc0UxxVXDQ8@cluster0.zbawy.mongodb.net/postdb?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
-
-
-app.use(bodyParser.json()) // Convertirá el cuerpo en un objeto JSON.
 mongoose.connect(mongoUri)
+
+app.use(bodyParser.json())
+app.use(cors())
 
 app.get('/api/posts/', apiRoutes.loadPosts)
 app.get('/api/posts/:id', apiRoutes.loadPost)
